@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SheThrive – AI Career Coach</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: 'Inter', -apple-system, sans-serif;
+            overflow: hidden;
+        }
+
+        /* ── GLOBAL COLORS ── */
+        :root {
+            --bg1: #0a0a0a;
+            --bg2: #0f0f0f;
+            --bg3: #111111;
+            --bg4: #0d0d0d;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.09);
+            --glass-deep: rgba(255, 255, 255, 0.03);
+            --glass-sidebar: rgba(15, 15, 15, 0.92);
+            --accent: #10a37f;
+            --accent2: #0d9488;
+            --text: #ececec;
+            --muted: #8e8ea0;
+            --dim: #5c5c6b;
+            --shadow: 0 8px 32px rgba(16, 163, 127, 0.08);
+            --shadow-deep: 0 20px 60px rgba(0, 0, 0, 0.6);
+            --r: 18px;
+        }
+
+        /* ── ANIMATED BACKGROUND ── */
+        .bg-wrap {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: #0f0f0f;
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.55;
+            animation: drift 12s ease-in-out infinite alternate;
+        }
+
+        .blob1 {
+            width: 500px;
+            height: 500px;
+            top: -150px;
+            left: -100px;
+            background: radial-gradient(circle, #10a37f, transparent 70%);
+            animation-delay: 0s;
+        }
+
+        .blob2 {
+            width: 400px;
+            height: 400px;
+            bottom: -100px;
+            right: -80px;
+            background: radial-gradient(circle, #0d9488, transparent 70%);
+            animation-delay: -4s;
+        }
+
+        .blob3 {
+            width: 350px;
+            height: 350px;
+            top: 40%;
+            left: 40%;
+            background: radial-gradient(circle, #6366f1, transparent 70%);
+            animation-delay: -8s;
+        }
+
+        @keyframes drift {
+            from {
+                transform: translate(0, 0) scale(1)
+            }
+
+            to {
+                transform: translate(30px, 20px) scale(1.08)
+            }
+        }
+
+        /* ── AUTH PAGE ── */
+        #auth-page {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-wrap {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-logo-wrap {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .auth-logo-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 72px;
+            height: 72px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #7c5cfc, #c084fc);
+            font-size: 32px;
+            margin-bottom: 14px;
+            box-shadow: 0 12px 40px rgba(124, 92, 252, 0.4);
+        }
+
+        .auth-logo-wrap h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.5px;
+        }
+
+        .auth-logo-wrap p {
+            font-size: 14px;
+            color: var(--muted);
+            margin-top: 6px;
+            font-weight: 400;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--shadow-deep);
+            padding: 28px;
+        }
+
+        .glass-card h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .glass-card .auth-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+        .social-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .social-pill {
+            flex: 1;
+            padding: 11px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--glass-border);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .social-pill:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0;
+            color: var(--dim);
+            font-size: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .field-group {
+            margin-bottom: 14px;
+        }
+
+        .field-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .field-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .field-group input:focus {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(124, 92, 252, 0.12);
+        }
+
+        .field-group input::placeholder {
+            color: var(--dim);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #7c5cfc, #c084fc);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            margin-top: 6px;
+            box-shadow: 0 6px 24px rgba(124, 92, 252, 0.4);
+            transition: all 0.2s;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(124, 92, 252, 0.5);
+        }
+
+        .auth-btn:active {
+            transform: scale(0.98);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .auth-footer a {
+            color: var(--accent);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* ── APP SHELL ── */
+        #app {
+            display: none;
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+        }
+
+        #app.visible {
+            display: flex;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: #0f0f0f;
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border-right: 1px solid var(--sidebar-border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 32px rgba(124, 92, 252, 0.06);
+        }
+
+        .sb-top {
+            padding: 20px 16px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sb-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sb-logo .mark {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #7c5cfc, #c084fc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 4px 14px rgba(124, 92, 252, 0.35);
+        }
+
+        .sb-logo .name {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.3px;
+        }
+
+        .sb-icon-btn {
+            width: 34px;
+            height: 34px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            transition: all 0.2s;
+            color: var(--muted);
+        }
+
+        .sb-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.05);
+        }
+
+        .new-btn {
+            margin: 0 14px 16px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, rgba(124, 92, 252, 0.12), rgba(192, 132, 252, 0.12));
+            border: 1.5px solid rgba(124, 92, 252, 0.2);
+            border-radius: 14px;
+            cursor: pointer;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .new-btn:hover {
+            background: linear-gradient(135deg, rgba(124, 92, 252, 0.2), rgba(192, 132, 252, 0.2));
+            transform: translateY(-1px);
+        }
+
+        .sb-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 10px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(124, 92, 252, 0.2);
+            border-radius: 10px;
+        }
+
+        .sb-section {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 8px 4px;
+        }
+
+        .sb-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 2px;
+        }
+
+        .sb-item:hover {
+            background: rgba(255, 255, 255, 0.55);
+            color: var(--text);
+            transform: translateX(2px);
+        }
+
+        .sb-item.active {
+            background: rgba(255, 255, 255, 0.75);
+            color: var(--accent);
+            font-weight: 600;
+            box-shadow: 0 2px 12px rgba(124, 92, 252, 0.1);
+        }
+
+        .sb-item .si-icon {
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .hist-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--muted);
+            transition: all 0.2s;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 1px;
+        }
+
+        .hist-item:hover {
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--text);
+        }
+
+        .hist-item span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sb-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 14px 10px;
+        }
+
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-row:hover {
+            background: rgba(255, 255, 255, 0.55);
+        }
+
+        .uavatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c5cfc, #c084fc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(124, 92, 252, 0.3);
+        }
+
+        .uinfo .uname {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .uinfo .uplan {
+            font-size: 11px;
+            color: var(--dim);
+            margin-top: 1px;
+        }
+
+        /* ── MAIN ── */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .tb-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .model-pill {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .model-pill:hover {
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .tb-right {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tb-pill {
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.55);
+            border: 1.5px solid var(--glass-border);
+            cursor: pointer;
+            color: var(--muted);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .tb-pill:hover {
+            background: rgba(255, 255, 255, 0.85);
+            color: var(--text);
+            transform: translateY(-1px);
+        }
+
+        .tb-pill.accent {
+            background: linear-gradient(135deg, #7c5cfc, #c084fc);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(124, 92, 252, 0.35);
+        }
+
+        .tb-pill.accent:hover {
+            box-shadow: 0 6px 22px rgba(124, 92, 252, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* ── MESSAGES ── */
+        .msgs-scroll {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .welcome {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .w-glyph {
+            font-size: 52px;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 8px 16px rgba(124, 92, 252, 0.2));
+        }
+
+        .welcome h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+        }
+
+        .welcome p {
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.65;
+            max-width: 440px;
+            margin-bottom: 32px;
+        }
+
+        .chips {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            max-width: 520px;
+            width: 100%;
+        }
+
+        .chip {
+            padding: 16px 18px;
+            text-align: left;
+            cursor: pointer;
+            background: var(--glass);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 20px;
+            transition: all 0.25s;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 4px 16px rgba(124, 92, 252, 0.06);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .chip:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(124, 92, 252, 0.15);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .chip .chip-icon {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .chip .chip-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .chip .chip-desc {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 3px;
+            line-height: 1.4;
+        }
+
+        .msg-list {
+            max-width: 740px;
+            margin: 0 auto;
+            padding: 24px 24px 8px;
+        }
+
+        .msg-row {
+            padding: 18px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .msg-av {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .msg-av.ai {
+            background: linear-gradient(135deg, #7c5cfc, #c084fc);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(124, 92, 252, 0.3);
+        }
+
+        .msg-av.user {
+            background: linear-gradient(135deg, #c084fc, #7c5cfc);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(192, 132, 252, 0.3);
+        }
+
+        .msg-body {
+            flex: 1;
+        }
+
+        .msg-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 5px;
+            letter-spacing: 0.2px;
+        }
+
+        .msg-text {
+            font-size: 14.5px;
+            line-height: 1.72;
+            color: var(--text);
+        }
+
+        .msg-text strong {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .msg-text p {
+            margin-bottom: 10px;
+        }
+
+        .msg-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .msg-text ul {
+            padding-left: 18px;
+        }
+
+        .msg-text ul li {
+            margin-bottom: 5px;
+        }
+
+        .msg-actions {
+            display: flex;
+            gap: 4px;
+            margin-top: 10px;
+        }
+
+        .act-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--dim);
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .act-btn:hover {
+            background: rgba(255, 255, 255, 0.7);
+            color: var(--text);
+            transform: scale(1.1);
+        }
+
+        /* Typing */
+        .typing-dots {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .td {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            opacity: 0.4;
+        }
+
+        .td:nth-child(1) {
+            animation: tdot 1.3s 0s infinite
+        }
+
+        .td:nth-child(2) {
+            animation: tdot 1.3s 0.15s infinite
+        }
+
+        .td:nth-child(3) {
+            animation: tdot 1.3s 0.3s infinite
+        }
+
+        @keyframes tdot {
+
+            0%,
+            60%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8)
+            }
+
+            30% {
+                opacity: 1;
+                transform: scale(1.2)
+            }
+        }
+
+        /* ── INPUT ── */
+        .input-zone {
+            padding: 14px 24px 18px;
+            flex-shrink: 0;
+        }
+
+        .input-glass {
+            max-width: 740px;
+            margin: 0 auto;
+            background: var(--glass);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 22px;
+            box-shadow: 0 8px 32px rgba(124, 92, 252, 0.1);
+            transition: box-shadow 0.25s, border-color 0.25s;
+        }
+
+        .input-glass:focus-within {
+            border-color: rgba(124, 92, 252, 0.4);
+            box-shadow: 0 12px 48px rgba(124, 92, 252, 0.18);
+        }
+
+        .input-tools {
+            display: flex;
+            gap: 4px;
+            padding: 10px 14px 6px;
+        }
+
+        .it-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--muted);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .it-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text);
+        }
+
+        #chat-input {
+            width: 100%;
+            padding: 6px 16px 12px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: var(--text);
+            resize: none;
+            max-height: 200px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        #chat-input::placeholder {
+            color: var(--dim);
+        }
+
+        .input-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 14px 12px;
+        }
+
+        .input-hint {
+            font-size: 11px;
+            color: var(--dim);
+        }
+
+        .send-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #7c5cfc, #c084fc);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(124, 92, 252, 0.4);
+            transition: all 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 22px rgba(124, 92, 252, 0.55);
+        }
+
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ── FEATURE LAUNCHER ── */
+        .fab {
+            position: fixed;
+            bottom: 28px;
+            left: 28px;
+            z-index: 9999;
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #7c5cfc, #c084fc);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 8px 28px rgba(124, 92, 252, 0.45);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .fab:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 36px rgba(124, 92, 252, 0.6);
+        }
+
+        .fab.open {
+            transform: rotate(135deg) scale(1.05);
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f43f5e, #fb7185);
+            box-shadow: 0 8px 28px rgba(244, 63, 94, 0.45);
+        }
+
+        /* Backdrop */
+        .fab-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 9997;
+            background: rgba(124, 92, 252, 0.08);
+            backdrop-filter: blur(6px) saturate(120%);
+            -webkit-backdrop-filter: blur(6px) saturate(120%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .fab-backdrop.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Panel */
+        .fab-panel {
+            position: fixed;
+            bottom: 96px;
+            left: 28px;
+            z-index: 9998;
+            width: 316px;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            border-radius: 28px;
+            box-shadow: 0 24px 72px rgba(124, 92, 252, 0.22), 0 4px 20px rgba(0, 0, 0, 0.06);
+            padding: 20px;
+            transform: translateY(20px) scale(0.92);
+            opacity: 0;
+            pointer-events: none;
+            transform-origin: bottom left;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+        }
+
+        .fab-panel.open {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .fp-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(124, 92, 252, 0.1);
+        }
+
+        .fp-hicon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #7c5cfc, #c084fc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 6px 18px rgba(124, 92, 252, 0.35);
+            flex-shrink: 0;
+        }
+
+        .fp-htitle {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .fp-hsub {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .fp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .fp-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 10px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background 0.2s;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 2px 10px rgba(124, 92, 252, 0.04);
+        }
+
+        .fp-card:hover {
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 10px 30px rgba(124, 92, 252, 0.16);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .fp-card:active {
+            transform: scale(0.96);
+        }
+
+        .fp-icon-wrap {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .fp-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--text);
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        /* Stagger animation */
+        .fab-panel.open .fp-card:nth-child(1) {
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s both
+        }
+
+        .fab-panel.open .fp-card:nth-child(2) {
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.10s both
+        }
+
+        .fab-panel.open .fp-card:nth-child(3) {
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both
+        }
+
+        .fab-panel.open .fp-card:nth-child(4) {
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.20s both
+        }
+
+        .fab-panel.open .fp-card:nth-child(5) {
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s both
+        }
+
+        .fab-panel.open .fp-card:nth-child(6) {
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.30s both
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0)
+            }
+        }
+
+        /* misc */
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .fade-in {
+            animation: fadeSlideUp 0.35s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Animated background -->
+    <div class="bg-wrap">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
+    </div>
+
+    <!-- ─── AUTH PAGE ─── -->
+    <div id="auth-page">
+        <div class="auth-wrap">
+            <div class="auth-logo-wrap">
+                <div class="auth-logo-icon">🌿</div>
+                <h1>SheThrive</h1>
+                <p>AI-powered career coaching for women</p>
+            </div>
+
+            <div class="glass-card" id="login-card">
+                <h2>Welcome back</h2>
+                <p class="auth-sub">Sign in to continue your journey</p>
+                <div class="social-row">
+                    <button class="social-pill" onclick="quickLogin()">🔵 Google</button>
+                    <button class="social-pill" onclick="quickLogin()">⚫ Apple</button>
+                </div>
+                <div class="divider">or continue with email</div>
+                <form onsubmit="handleLogin(event)">
+                    <div class="field-group">
+                        <label>EMAIL ADDRESS</label>
+                        <input id="l-email" type="email" placeholder="jane@example.com" />
+                    </div>
+                    <div class="field-group">
+                        <label>PASSWORD</label>
+                        <input id="l-pass" type="password" placeholder="Your password" />
+                    </div>
+                    <button class="auth-btn" type="submit">Sign In →</button>
+                </form>
+                <p class="auth-footer">No account? <a onclick="switchTo('signup')">Create one</a></p>
+            </div>
+
+            <div class="glass-card hidden" id="signup-card">
+                <h2>Create account</h2>
+                <p class="auth-sub">Join thousands of women thriving</p>
+                <div class="social-row">
+                    <button class="social-pill" onclick="quickLogin()">🔵 Sign up with Google</button>
+                </div>
+                <div class="divider">or use email</div>
+                <form onsubmit="handleSignup(event)">
+                    <div class="field-group">
+                        <label>FULL NAME</label>
+                        <input id="s-name" type="text" placeholder="Jane Doe" />
+                    </div>
+                    <div class="field-group">
+                        <label>EMAIL ADDRESS</label>
+                        <input id="s-email" type="email" placeholder="jane@example.com" />
+                    </div>
+                    <div class="field-group">
+                        <label>PASSWORD</label>
+                        <input id="s-pass" type="password" placeholder="Create a strong password" />
+                    </div>
+                    <button class="auth-btn" type="submit">Create Account →</button>
+                </form>
+                <p class="auth-footer">Have an account? <a onclick="switchTo('login')">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── MAIN APP ─── -->
+    <div id="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sb-top">
+                <div class="sb-logo">
+                    <div class="mark">🌿</div>
+                    <span class="name">SheThrive</span>
+                </div>
+                <button class="sb-icon-btn" onclick="newChat()">✏️</button>
+            </div>
+
+            <button class="new-btn" onclick="newChat()">＋ New session</button>
+
+            <div class="sb-nav">
+                <div class="sb-section">Features</div>
+                <button class="sb-item active" onclick="activateFeature('coach', this)"><span class="si-icon">✨</span>
+                    AI Career Coach</button>
+                <button class="sb-item" onclick="activateFeature('negotiate', this)"><span class="si-icon">🎭</span>
+                    Negotiation Sim</button>
+                <button class="sb-item" onclick="activateFeature('salary', this)"><span class="si-icon">💰</span> Salary
+                    Calculator</button>
+                <button class="sb-item" onclick="activateFeature('mentor', this)"><span class="si-icon">🤝</span> Find a
+                    Mentor</button>
+                <button class="sb-item" onclick="activateFeature('progress', this)"><span class="si-icon">📈</span> My
+                    Progress</button>
+
+                <div class="sb-section" style="margin-top:14px">Recent</div>
+                <button class="hist-item">💬 <span>How to negotiate a raise...</span></button>
+                <button class="hist-item">💬 <span>Overcoming imposter syndrome</span></button>
+                <button class="hist-item">💬 <span>Sr. Engineer salary insights</span></button>
+            </div>
+
+            <div class="sb-bottom">
+                <div class="user-row">
+                    <div class="uavatar" id="uavatar">J</div>
+                    <div class="uinfo">
+                        <div class="uname" id="uname">Jane</div>
+                        <div class="uplan">SheThrive Free Plan</div>
+                    </div>
+                    <button class="sb-icon-btn" onclick="logout()" style="margin-left:auto" title="Sign out">↩</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CHAT -->
+        <main class="chat-main">
+
+            <div class="topbar">
+                <div class="tb-left">
+                    <button class="model-pill">🌿 SheThrive Coach ▾</button>
+                </div>
+                <div class="tb-right">
+                    <button class="theme-toggle" id="theme-toggle-btn" onclick="toggleTheme()"
+                        title="Toggle Light / Dark">🌙</button>
+                    <button class="tb-pill" id="mode-tag">✨ Career Coach</button>
+                    <button class="tb-pill accent" onclick="newChat()">+ New Chat</button>
+                </div>
+            </div>
+
+            <div class="msgs-scroll" id="msgs-scroll">
+                <!-- Welcome -->
+                <div class="welcome" id="welcome">
+                    <div class="w-glyph">🌿</div>
+                    <h2>Hello, <span id="wname">Jane</span>!</h2>
+                    <p>I'm your AI career coach, here to help you negotiate smarter, grow faster, and own your worth.
+                        What shall we tackle today?</p>
+                    <div class="chips">
+                        <div class="chip" onclick="sendMsg('How do I negotiate a higher salary with confidence?')">
+                            <div class="chip-icon">💰</div>
+                            <div class="chip-title">Negotiate my salary</div>
+                            <div class="chip-desc">Scripts and strategies to ask boldly</div>
+                        </div>
+                        <div class="chip" onclick="sendMsg('I struggle with imposter syndrome. What should I do?')">
+                            <div class="chip-icon">🧠</div>
+                            <div class="chip-title">Beat imposter syndrome</div>
+                            <div class="chip-desc">Build unshakeable inner confidence</div>
+                        </div>
+                        <div class="chip"
+                            onclick="sendMsg('Start an AI salary negotiation roleplay simulation with me.')">
+                            <div class="chip-icon">🎭</div>
+                            <div class="chip-title">Practice negotiation</div>
+                            <div class="chip-desc">Safe AI recruiter roleplay</div>
+                        </div>
+                        <div class="chip"
+                            onclick="sendMsg('What is the salary range for a Product Manager with 5 years in Tech?')">
+                            <div class="chip-icon">📊</div>
+                            <div class="chip-title">Know my market value</div>
+                            <div class="chip-desc">Real salary benchmarks for my role</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message list -->
+                <div class="msg-list hidden" id="msg-list"></div>
+            </div>
+
+            <div class="input-zone">
+                <div class="input-glass">
+                    <div class="input-tools">
+                        <button class="it-btn">📎 Attach</button>
+                        <button class="it-btn">🎙️ Voice</button>
+                        <button class="it-btn" onclick="triggerFeature('negotiate')">🎭 Simulate</button>
+                    </div>
+                    <textarea id="chat-input" rows="1" placeholder="Message SheThrive…" oninput="grow(this)"
+                        onkeydown="onKey(event)"></textarea>
+                    <div class="input-foot">
+                        <span class="input-hint">Enter to send · Shift+Enter for new line</span>
+                        <button class="send-btn" onclick="sendMessage()">➤</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ─── FEATURE LAUNCHER FAB ─── -->
+    <div class="fab-backdrop" id="fab-bd" onclick="closeFab()"></div>
+
+    <button class="fab" id="fab" onclick="toggleFab()" title="Open Features">🌿</button>
+
+    <div class="fab-panel" id="fab-panel">
+        <div class="fp-header">
+            <div class="fp-hicon">🌿</div>
+            <div>
+                <div class="fp-htitle">SheThrive</div>
+                <div class="fp-hsub">All features at your fingertips</div>
+            </div>
+        </div>
+        <div class="fp-grid">
+            <div class="fp-card" onclick="triggerFeature('assistant')">
+                <div class="fp-icon-wrap"
+                    style="background:linear-gradient(135deg,rgba(124,92,252,0.15),rgba(192,132,252,0.15))">✨</div>
+                <div class="fp-label">Personal Assistant</div>
+            </div>
+            <div class="fp-card" onclick="triggerFeature('chat')">
+                <div class="fp-icon-wrap"
+                    style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(129,140,248,0.15))">💬</div>
+                <div class="fp-label">Help Chat Box</div>
+            </div>
+            <div class="fp-card" onclick="triggerFeature('calculator')">
+                <div class="fp-icon-wrap"
+                    style="background:linear-gradient(135deg,rgba(234,179,8,0.15),rgba(251,191,36,0.15))">💰</div>
+                <div class="fp-label">Negotiation Calc</div>
+            </div>
+            <div class="fp-card" onclick="triggerFeature('mentor')">
+                <div class="fp-icon-wrap"
+                    style="background:linear-gradient(135deg,rgba(236,72,153,0.15),rgba(244,114,182,0.15))">🤝</div>
+                <div class="fp-label">Personal Mentor</div>
+            </div>
+            <div class="fp-card" onclick="triggerFeature('progress')">
+                <div class="fp-icon-wrap"
+                    style="background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(96,165,250,0.15))">📈</div>
+                <div class="fp-label">Progress Tracker</div>
+            </div>
+            <div class="fp-card" onclick="triggerFeature('recruiter')">
+                <div class="fp-icon-wrap"
+                    style="background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(251,113,133,0.15))">🎭</div>
+                <div class="fp-label">AI Recruiter Sim</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // ── THEME TOGGLE ──────────────────────────────────
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            const next = isDark ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            document.getElementById('theme-toggle-btn').textContent = next === 'dark' ? '🌙' : '☀️';
+            // Animate the page bg blob colours
+            document.querySelectorAll('.blob').forEach(b => b.style.transition = 'all 1s ease');
+            localStorage.setItem('shethrive-theme', next);
+        }
+
+        // Restore saved theme on load
+        (function () {
+            const saved = localStorage.getItem('shethrive-theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+            const btn = document.getElementById('theme-toggle-btn');
+            if (btn) btn.textContent = saved === 'dark' ? '🌙' : '☀️';
+        })();
+
+        // ── STATE ──
+        let user = { name: '', email: '' };
+        let mode = 'coach';
+        let busy = false;
+
+        const REPLIES = {
+            coach: [
+                `Great question! Here's your negotiation playbook:\n\n**1. Anchor First, Anchor High**\nAlways name your number before they do. Research market rates on Glassdoor, LinkedIn Salary, and Levels.fyi, then ask for 15–20% above your target.\n\n**2. Use the Power Phrase**\n_"Based on my research and my track record of [X achievement], I believe $[Y] reflects my market value."_\n\n**3. Stay Silent After the Ask**\nOnce you name your number — stop talking. Silence feels uncomfortable, but it works in your favour. 💪`,
+                `I completely understand. **Imposter syndrome is incredibly common** — studies show 70% of professionals experience it, and it hits women particularly hard in competitive fields.\n\nHere's what actually helps:\n\n- **Keep a "wins file"** — Document every compliment, achievement, and milestone. Read it when doubt creeps in.\n- **Separate feelings from facts** — You feel like a fraud, but the *facts* say you earned your seat.\n- **Name it to tame it** — Tell a trusted colleague. Saying it out loud removes its power.\n\nYou belong in every room you walk into. 🌸`,
+                `Here's a **7-day promotion sprint plan**:\n\n**Days 1–2:** Write down 5 measurable wins from the past 3 months.\n**Day 3:** Book a 1:1 with your manager. Ask: *"What does success at the next level look like for me?"*\n**Days 4–5:** Draft your "promotion case" — impact, metrics, and future value.\n**Day 6:** Share your goals with a sponsor (not just a mentor) who can advocate for you.\n**Day 7:** Rest and believe. You've put in the work. 🏆`,
+                `Here's a salary breakdown for your profile:\n\n**Product Manager · 5 Years · Tech Industry**\n- Entry: $70,000 – $90,000\n- Mid: $100,000 – $125,000\n- Senior: $130,000 – $155,000\n- Staff/Principal: $165,000+\n\n**Your fair market value: ~$118,000**\n💡 Tip: Open negotiations at **$132,000** — that's 12% above fair value, giving you room to land at your target.`,
+            ],
+            negotiate: [
+                `Good morning! Thank you so much for coming in today. We've reviewed your candidacy and I have to say, your background is genuinely impressive. We'd love to extend you an offer for the **Senior Product Manager** position. We were thinking around **$78,000** as the base salary. How does that land for you?`,
+                `I appreciate you sharing that context — your revenue impact is exactly the kind of thing that helps me build a case internally. That said, our band for this role is quite structured for equity reasons. Could we explore something around **$85,000–$87,000**? We also have an excellent equity package and remote-first policy on top of that.`,
+                `You drive a very compelling argument, and honestly I respect your preparation. Let me be transparent — I can get approval up to **$89,500**. I'd also like to add a **$5,000 signing bonus** to help bridge any gap. Is that something that would work for you?`,
+                `You've negotiated this really, really well — and I think that actually says a lot about how you'll perform in this role. Final offer: **$90,000 base + $5,000 signing bonus + equity from Day 1 + accelerated 6-month review.** I'm really hoping you'll say yes. 🤝`,
+            ],
+            salary: [
+                `Here's a **full market salary breakdown** based on your query:\n\n| Level | Salary Range |\n|---|---|\n| Entry (0–2 yrs) | $62,000 – $82,000 |\n| Mid (3–5 yrs) | $95,000 – $120,000 |\n| Senior (6–9 yrs) | $128,000 – $158,000 |\n| Lead/Staff | $162,000 – $200,000+ |\n\n**Your fair market rate: ~$112,000**\n\n💡 Pro tip: Open your negotiation at **$125,000** — 12% above fair value — to give yourself room to land exactly where you deserve.`,
+            ],
+        };
+        const idx = { coach: 0, negotiate: 0, salary: 0 };
+
+        // ── AUTH ──
+        function switchTo(form) {
+            document.getElementById('login-card').classList.toggle('hidden', form !== 'login');
+            document.getElementById('signup-card').classList.toggle('hidden', form !== 'signup');
+        }
+        function handleLogin(e) {
+            e.preventDefault();
+            const em = document.getElementById('l-email').value;
+            if (!em) return;
+            enter(em.split('@')[0], em);
+        }
+        function handleSignup(e) {
+            e.preventDefault();
+            const nm = document.getElementById('s-name').value || 'Friend';
+            const em = document.getElementById('s-email').value;
+            enter(nm, em);
+        }
+        function quickLogin() { enter('Jane', 'jane@example.com'); }
+        function enter(name, email) {
+            user = { name, email };
+            const n = name.charAt(0).toUpperCase() + name.slice(1);
+            document.getElementById('wname').textContent = n;
+            document.getElementById('uname').textContent = n;
+            document.getElementById('uavatar').textContent = n.charAt(0).toUpperCase();
+            document.getElementById('auth-page').style.display = 'none';
+            document.getElementById('app').classList.add('visible');
+        }
+        function logout() {
+            if (!confirm('Sign out of SheThrive?')) return;
+            document.getElementById('app').classList.remove('visible');
+            document.getElementById('auth-page').style.display = 'flex';
+            newChat();
+        }
+
+        // ── NAVIGATION ──
+        function activateFeature(f, el) {
+            mode = f;
+            document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+            el?.classList.add('active');
+            const labels = { coach: '✨ Career Coach', negotiate: '🎭 Negotiation Sim', salary: '💰 Salary Calc', mentor: '🤝 Mentors', progress: '📈 Progress' };
+            document.getElementById('mode-tag').textContent = labels[f] || '✨ Career Coach';
+        }
+        function triggerFeature(f) {
+            closeFab();
+            const map = {
+                assistant: { mode: 'coach', msg: 'Hi! I need some career guidance and coaching.' },
+                chat: { mode: 'coach', msg: 'Quick question: what are my rights at work when it comes to equal pay?' },
+                calculator: { mode: 'salary', msg: 'Calculate a fair salary for a Software Engineer with 5 years experience in the Tech industry.' },
+                mentor: { mode: 'coach', msg: 'I\'d love to connect with a mentor. Can you help me find the right one?' },
+                progress: { mode: 'coach', msg: 'Give me a weekly progress plan to improve my negotiation skills.' },
+                recruiter: { mode: 'negotiate', msg: 'Start a realistic salary negotiation simulation with me. You play a Hiring Manager.' },
+            };
+            const a = map[f];
+            if (!a) return;
+            mode = a.mode;
+            document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+            setTimeout(() => sendMsg(a.msg), 120);
+        }
+
+        // ── FAB ──
+        function toggleFab() {
+            const isOpen = document.getElementById('fab-panel').classList.contains('open');
+            isOpen ? closeFab() : openFab();
+        }
+        function openFab() {
+            document.getElementById('fab').classList.add('open');
+            document.getElementById('fab-panel').classList.add('open');
+            document.getElementById('fab-bd').classList.add('open');
+        }
+        function closeFab() {
+            document.getElementById('fab').classList.remove('open');
+            document.getElementById('fab-panel').classList.remove('open');
+            document.getElementById('fab-bd').classList.remove('open');
+        }
+
+        // ── CHAT ──
+        function newChat() {
+            document.getElementById('msg-list').innerHTML = '';
+            document.getElementById('msg-list').classList.add('hidden');
+            document.getElementById('welcome').classList.remove('hidden');
+            document.getElementById('chat-input').value = '';
+            idx.coach = idx.negotiate = idx.salary = 0;
+        }
+
+        function sendMsg(text) {
+            document.getElementById('chat-input').value = text;
+            sendMessage();
+        }
+
+        function sendMessage() {
+            const inp = document.getElementById('chat-input');
+            const text = inp.value.trim();
+            if (!text || busy) return;
+            inp.value = ''; inp.style.height = 'auto'; busy = true;
+
+            document.getElementById('welcome').classList.add('hidden');
+            const list = document.getElementById('msg-list');
+            list.classList.remove('hidden');
+
+            addBubble('user', text);
+            const tid = addTyping();
+
+            setTimeout(() => {
+                removeTyping(tid);
+                addBubble('ai', getReply());
+                busy = false;
+            }, 1200 + Math.random() * 900);
+        }
+
+        function getReply() {
+            const pool = REPLIES[mode] || REPLIES.coach;
+            const i = idx[mode] || 0;
+            idx[mode] = i + 1;
+            return pool[i % pool.length];
+        }
+
+        function addBubble(role, text) {
+            const list = document.getElementById('msg-list');
+            const wrap = document.createElement('div');
+            wrap.className = 'msg-row fade-in';
+            const name = role === 'user' ? (user.name || 'You') : 'SheThrive';
+            const avLetter = role === 'user' ? (user.name || 'Y').charAt(0).toUpperCase() : '🌿';
+            wrap.innerHTML = `
+      <div class="msg-av ${role}">${avLetter}</div>
+      <div class="msg-body">
+        <div class="msg-name">${name}</div>
+        <div class="msg-text">${fmt(text)}</div>
+        ${role === 'ai' ? `<div class="msg-actions"><button class="act-btn">📋</button><button class="act-btn">👍</button><button class="act-btn">👎</button><button class="act-btn">🔄</button></div>` : ''}
+      </div>`;
+            list.appendChild(wrap);
+            scroll();
+        }
+
+        function addTyping() {
+            const list = document.getElementById('msg-list');
+            const id = 'typing-' + Date.now();
+            const w = document.createElement('div');
+            w.className = 'msg-row fade-in'; w.id = id;
+            w.innerHTML = `<div class="msg-av ai">🌿</div><div class="msg-body"><div class="msg-name">SheThrive</div><div class="typing-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>`;
+            list.appendChild(w); scroll(); return id;
+        }
+        function removeTyping(id) { document.getElementById(id)?.remove(); }
+
+        function fmt(t) {
+            return t
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/_(.*?)_/g, '<em>$1</em>')
+                .replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br/>')
+                .replace(/^/, '<p>').replace(/$/, '</p>');
+        }
+
+        function scroll() {
+            const s = document.getElementById('msgs-scroll');
+            s.scrollTop = s.scrollHeight;
+        }
+        function grow(el) {
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 200) + 'px';
+        }
+        function onKey(e) {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+        }
+    </script>
+</body>
+
+</html>
